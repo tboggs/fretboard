@@ -1,37 +1,3 @@
-import numpy as np
-
-NTONES = 12
-MAJOR = [2, 2, 1, 2, 2, 2, 1]
-
-whole_notes = [n for n in 'CDEFGAB']
-sharps = [n + '#' for n in whole_notes]
-flats = [n + 'b' for n in whole_notes]
-
-# Names of all notes using sharp notation
-notess = list(reduce(lambda a, b: a + b, zip(whole_notes, sharps)))
-notess.remove('E#')
-notess.remove('B#')
-
-# Names of all notes using float notation
-notesb = list(reduce(lambda a, b: a + b, zip(flats, whole_notes)))
-notesb.remove('Fb')
-notesb.remove('Cb')
-
-def i2ns(i):
-    '''Returns name of note (using sharp), given number of semitones above C.'''
-    return notess[i % NTONES]
-
-def i2nb(i):
-    '''Returns name of note (using flat), given number of semitones above C.'''
-    return notesb[i % NTONES]
-
-def n2i(note_name):
-    '''Return numeric index of note, given note string.'''
-    if 'b' in note_name:
-        return notesb.index(note_name)
-    else:
-        return notess.index(note_name)
-    
 class Scale(object):
     def __init__(self, key):
         self.key = key
@@ -39,6 +5,9 @@ class Scale(object):
 
     def level(self, i):
         return self.notes[level - 1]
+
+    def create_notes(self):
+        raise NotImplementedError('Class Scale must be subclassed.')
 
     def get_scale_degree(self, note):
         if note not in self.notes:
@@ -116,34 +85,6 @@ class Blues(Scale):
             raise ValueError('Note is not in scale')
         return self.degrees[self.notes.index(note)]
 
-class Note:
-    display_sharp = True
-    def __init__(self, tone):
-        if type(tone) == str:
-            tone = n2i(tone)
-        while tone < 0:
-            tone += NTONES
-        self.tone = tone
-        self.value = tone % NTONES
-    def __str__(self):
-        if self.display_sharp:
-            return i2ns(self.value % NTONES)
-        else:
-            return i2nb(self.value % NTONES)
-    def __eq__(self, note):
-        if type(note) in (int, str):
-            note = Note(note)
-        return self.value == note.value
-    def __repr__(self):
-        return str(self)
-    def __add__(self, semitones):
-        return Note(self.tone + semitones)
-    def __sub__(self, lower):
-        if isinstance(lower, int):
-            return Note(self.tone - lower)
-        else:
-            return self.tone - lower.tone
-
 # Functions for display in spreadsheet
 
 def note_name(note, scale):
@@ -156,23 +97,3 @@ def names(notes, sharps=True):
         f = i2nb
     return [f(n) for n in notes]
 
-def show_X(n, scale):
-    n = n % NTONES
-    if n == scale[0]:
-        return 'XX'
-    elif n in scale:
-        return 'X'
-    else:
-        return None
-
-def show_scale_degree(note, scale):
-    if note in scale:
-        return scale.get_scale_degree(note)
-    else:
-        return None
-
-def display_note(i, scale, sharps=True):
-    if sharps:
-        return i2ns(i)
-    else:
-        return i2nb(i)
