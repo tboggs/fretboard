@@ -1,7 +1,6 @@
 import numpy as np
 
 NTONES = 12
-MAJOR = [2, 2, 1, 2, 2, 2, 1]
 
 whole_notes = [n for n in 'CDEFGAB']
 sharps = [n + '#' for n in whole_notes]
@@ -56,7 +55,19 @@ class Note:
         return Note(self.tone + semitones)
     def __sub__(self, lower):
         if isinstance(lower, int):
+            # Return the note `lower` tones below this one.
             return Note(self.tone - lower)
         else:
+            # Return the number of semitones between the two notes.
             return self.tone - lower.tone
+    def interval(self, note):
+        '''Return number of semitones up to next instance of `note`.'''
+        return interval(self, note)
 
+def interval(note1, note2):
+    '''Return number of semitones from `note1` to next instance of `note2`.'''
+    (t1, t2) = (note1.tone, note2.tone)
+    if t2 >= t1:
+        return (t2 - t1) % NTONES
+    else:
+        return NTONES - (t1 - t2) % NTONES

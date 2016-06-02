@@ -1,6 +1,12 @@
+import numpy as np
+from .notes import Note
+
+MAJOR = [2, 2, 1, 2, 2, 2, 1]
+
 class Scale(object):
     def __init__(self, key):
         self.key = key
+        self.root = Note(key)
         self.create_notes()
 
     def level(self, i):
