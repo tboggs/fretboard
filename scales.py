@@ -33,18 +33,18 @@ class Scale(object):
         return '[{}]'.format(', '.join([str(n) for n in self.notes]))
 
 class Major(Scale):
-    def __init__(self, key, mode=0):
+    def __init__(self, key, mode=1):
         self.mode = mode
         super(Major, self).__init__(key)
     def create_notes(self):
-        intervals = np.roll(MAJOR, -self.mode)[:-1]
+        intervals = np.roll(MAJOR, -(self.mode - 1))[:-1]
         self.notes = [Note(self.key)]    
         for i in intervals:
             self.notes.append(self.notes[-1] + i)
 
 class Minor(Major):
     def __init__(self, key):
-        super(Minor, self).__init__(key, 5)
+        super(Minor, self).__init__(key, 6)
 
 class HarmonicMinor(Minor):
     def create_notes(self):

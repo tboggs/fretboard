@@ -1,6 +1,7 @@
 import numpy as np
 
 NTONES = 12
+CREF = 10000
 
 whole_notes = [n for n in 'CDEFGAB']
 sharps = [n + '#' for n in whole_notes]
@@ -18,23 +19,27 @@ notesb.remove('Cb')
 
 def i2ns(i):
     '''Returns name of note (using sharp), given number of semitones above C.'''
-    return notess[i % NTONES]
+    return notess[(i - CREF) % NTONES]
 
 def i2nb(i):
     '''Returns name of note (using flat), given number of semitones above C.'''
-    return notesb[i % NTONES]
+    return notesb[(i - CREF) % NTONES]
 
 def n2i(note_name):
     '''Return numeric index of note, given note string.'''
-    if 'b' in note_name:
-        return notesb.index(note_name)
+    if note_name[-1] == 'b':
+        return n2i(note_name[:-1]) - 1
+    elif note_name[-1] == '#':
+        return n2i(note_name[:-1]) + 1
     else:
-        return notess.index(note_name)
+        return CREF + notess.index(note_name)
     
 class Note:
     display_sharp = True
     def __init__(self, tone):
         if type(tone) == str:
+            if len(tone) == 2 and tone[-1] == 'b':
+                self.display_sharp = False
             tone = n2i(tone)
         while tone < 0:
             tone += NTONES
