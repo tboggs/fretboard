@@ -2,12 +2,15 @@ import numpy as np
 from .notes import Note
 
 MAJOR = [2, 2, 1, 2, 2, 2, 1]
+INTERVAL_NAMES = ['R', 'm2', 'M2', 'm3', 'M3', '4', '5b', '5', 'm6', 'M6',
+                  'm7', 'M7']
 
 class Scale(object):
     def __init__(self, key):
         self.key = key
         self.root = Note(key)
         self.create_notes()
+        self.interval_names = INTERVAL_NAMES[:]
 
     def level(self, i):
         return self.notes[level - 1]
@@ -19,6 +22,9 @@ class Scale(object):
         if note not in self.notes:
             raise ValueError('Note is not in scale')
         return str(self.notes.index(note) + 1)
+
+    def get_interval_name(self, note):
+        return self.interval_names[self.root.interval(note)]
 
     def __iter__(self):
         for t in self.notes:
