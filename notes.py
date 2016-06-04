@@ -35,7 +35,9 @@ def n2i(note_name):
         return CREF + notess.index(note_name)
     
 class Note:
+    '''Class to represent a musical note.'''
     display_sharp = True
+
     def __init__(self, tone):
         if type(tone) == str:
             if len(tone) == 2 and tone[-1] == 'b':
@@ -45,19 +47,24 @@ class Note:
             tone += NTONES
         self.tone = tone
         self.value = tone % NTONES
+
     def __str__(self):
         if self.display_sharp:
             return i2ns(self.value % NTONES)
         else:
             return i2nb(self.value % NTONES)
+
     def __eq__(self, note):
         if type(note) in (int, str):
             note = Note(note)
         return self.value == note.value
+
     def __repr__(self):
         return str(self)
+
     def __add__(self, semitones):
         return Note(self.tone + semitones)
+
     def __sub__(self, lower):
         if isinstance(lower, int):
             # Return the note `lower` tones below this one.
@@ -65,6 +72,7 @@ class Note:
         else:
             # Return the number of semitones between the two notes.
             return self.tone - lower.tone
+
     def interval(self, note):
         '''Return number of semitones up to next instance of `note`.'''
         return interval(self, note)
