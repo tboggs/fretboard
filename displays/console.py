@@ -194,7 +194,7 @@ class Console(FretboardDisplay):
 
         if not (fret_numbers is None or fret_numbers.lower() == 'none'):
             # Labels to indicate fret number
-            labels = self.get_fret_number_labels()[imin:fmax]
+            labels = self.get_fret_number_labels()[imin:fmax + 1]
             fmt = '{:^%ds}' % self.fret_width
             fret_number_str = ' ' * (len(pre_frets[0]) + 1) + ' '.join(
                 [fmt.format(s) for s in labels])
