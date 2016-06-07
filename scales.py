@@ -2,7 +2,8 @@ import numpy as np
 from .notes import Note
 
 __all__ = ['Scale', 'Diatonic', 'Major', 'Minor', 'HarmonicMinor',
-           'Pentatonic', 'MajorPentatonic', 'MinorPentatonic', 'Blues']
+           'Pentatonic', 'MajorPentatonic', 'MinorPentatonic', 'Blues',
+           'Chromatic']
 
 MAJOR = [2, 2, 1, 2, 2, 2, 1]
 PENTATONIC = [2, 2, None, 3, 2, None, 3]
@@ -184,4 +185,21 @@ class Blues(Scale):
         if note not in self.notes:
             raise ValueError('Note is not in scale')
         return self.degrees[self.notes.index(note)]
+
+class Chromatic(Scale):
+    '''A chromatic (12-tone) scale.'''
+    def __init__(self, key):
+        '''Creates a scale with all 12 tones.
+
+        ARGUMENTS:
+
+            key (str):
+
+                Name of the key note for the scale
+        '''
+        super(Chromatic, self).__init__(key)
+
+    def create_notes(self):
+        from .notes import Note, NTONES
+        self.notes = [self.root + i for i in range(NTONES)]
 
