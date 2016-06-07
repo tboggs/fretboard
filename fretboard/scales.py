@@ -1,4 +1,3 @@
-import numpy as np
 from .notes import Note
 
 __all__ = ['Scale', 'Diatonic', 'Major', 'Minor', 'HarmonicMinor',
@@ -11,6 +10,9 @@ INTERVAL_NAMES = ['R', 'm2', 'M2', 'm3', 'M3', '4', '5b', '5', 'm6', 'M6',
                   'm7', 'M7']
 DIATONIC_MODE_NAMES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian',
                        'Mixolydian', 'Aeolian', 'Locrian']
+
+# Equivalent of np.roll for plain lists
+roll = lambda s, i: s[-(i % len(s)):] + s[:-(i % len(s))]
 
 class Scale(object):
     '''Base class for scales.'''
@@ -75,7 +77,7 @@ class Diatonic(Scale):
         super(Diatonic, self).__init__(key)
 
     def create_notes(self):
-        intervals = np.roll(MAJOR, -(self.mode - 1))[:-1]
+        intervals = roll(MAJOR, -(self.mode - 1))[:-1]
         self.notes = [Note(self.key)]    
         for i in intervals:
             self.notes.append(self.notes[-1] + i)
@@ -130,7 +132,7 @@ class Pentatonic(Scale):
         super(Pentatonic, self).__init__(key)
 
     def create_notes(self):
-        intervals = np.roll(PENTATONIC, -(self.mode - 1))
+        intervals = roll(PENTATONIC, -(self.mode - 1))
         intervals = [i for i in intervals if i is not None][:-1]
         self.notes = [Note(self.key)]    
         for i in intervals:
