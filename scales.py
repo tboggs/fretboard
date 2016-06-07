@@ -1,13 +1,15 @@
 import numpy as np
 from .notes import Note
 
-__all__ = ['Scale', 'Major', 'Minor', 'HarmonicMinor', 'Pentatonic',
-           'MinorPentatonic', 'Blues']
+__all__ = ['Scale', 'Diatonic', 'Major', 'Minor', 'HarmonicMinor',
+           'Pentatonic', 'MajorPentatonic', 'MinorPentatonic', 'Blues']
 
 MAJOR = [2, 2, 1, 2, 2, 2, 1]
 PENTATONIC = [2, 2, None, 3, 2, None, 3]
 INTERVAL_NAMES = ['R', 'm2', 'M2', 'm3', 'M3', '4', '5b', '5', 'm6', 'M6',
                   'm7', 'M7']
+DIATONIC_MODE_NAMES = ['Ionian', 'Dorian', 'Phrygian', 'Lydian',
+                       'Mixolydian', 'Aeolian', 'Locrian']
 
 class Scale(object):
     '''Base class for scales.'''
@@ -47,8 +49,8 @@ class Scale(object):
     def __str__(self):
         return '[{}]'.format(', '.join([str(n) for n in self.notes]))
 
-class Major(Scale):
-    '''Major Diatonic Scale.'''
+class Diatonic(Scale):
+    '''Diatonic Scale.'''
     def __init__(self, key, mode=1):
         '''Creates the major diatonic scale.
 
@@ -63,8 +65,13 @@ class Major(Scale):
                 Mode associated with the diatonic scale (e.g., mode=6
                 corresponds to the minor diatonic scale).
         '''
+        if isinstance(mode, str):
+            try:
+                mode = DIATONIC_MODE_NAMES.index(mode.capitalize()) + 1
+            except:
+                raise ValueError('Invalid diatonic mode name.')
         self.mode = mode
-        super(Major, self).__init__(key)
+        super(Diatonic, self).__init__(key)
 
     def create_notes(self):
         intervals = np.roll(MAJOR, -(self.mode - 1))[:-1]
@@ -72,7 +79,20 @@ class Major(Scale):
         for i in intervals:
             self.notes.append(self.notes[-1] + i)
 
-class Minor(Major):
+class Major(Diatonic):
+    '''Minor Diatonic Scale.'''
+    def __init__(self, key):
+        '''Creates the minor diatonic scale.
+
+        ARGUMENTS:
+
+            key (str):
+
+                Name of the key note for the scale
+        '''
+        super(Major, self).__init__(key, 1)
+
+class Minor(Diatonic):
     '''Minor Diatonic Scale.'''
     def __init__(self, key):
         '''Creates the minor diatonic scale.
@@ -115,6 +135,18 @@ class Pentatonic(Scale):
         for i in intervals:
             self.notes.append(self.notes[-1] + i)
 
+class MajorPentatonic(Pentatonic):
+    def __init__(self, key):
+        '''Creates the pentatonic scale.
+
+        ARGUMENTS:
+
+            key (str):
+
+                Name of the key note for the scale
+        '''
+        super(MajorPentatonic, self).__init__(key, mode=1)
+
 class MinorPentatonic(Pentatonic):
     def __init__(self, key):
         '''Creates the pentatonic scale.
@@ -128,6 +160,7 @@ class MinorPentatonic(Pentatonic):
         super(MinorPentatonic, self).__init__(key, mode=6)
 
 class Blues(Scale):
+    '''A natural minor scale with a flat fifth (blue note) added.'''
     def __init__(self, key):
         '''Creates the blues scale.
 
