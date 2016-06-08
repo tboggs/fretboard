@@ -1,3 +1,4 @@
+from __future__ import division, print_function, unicode_literals
 
 class Fret(object):
     '''Represents an individual fret on a fretboard.'''

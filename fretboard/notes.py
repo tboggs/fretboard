@@ -1,4 +1,9 @@
-import numpy as np
+from __future__ import division, print_function, unicode_literals
+from .utils import IS_PYTHON3
+
+if IS_PYTHON3:
+    import functools
+    reduce = functools.reduce
 
 NTONES = 12
 CREF = 10000
@@ -39,7 +44,8 @@ class Note:
     display_sharp = True
 
     def __init__(self, tone):
-        if type(tone) == str:
+        from .utils import is_string
+        if is_string(tone):
             if len(tone) == 2 and tone[-1] == 'b':
                 self.display_sharp = False
             tone = n2i(tone)
@@ -58,6 +64,9 @@ class Note:
         if type(note) in (int, str):
             note = Note(note)
         return self.value == note.value
+
+    def __ne__(self, note):
+        return not (self == note)
 
     def __repr__(self):
         return str(self)

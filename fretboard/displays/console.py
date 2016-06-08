@@ -1,4 +1,6 @@
+from __future__ import division, print_function, unicode_literals
 from .common import FretboardDisplay
+from ..utils import is_string
 
 class Console(FretboardDisplay):
     '''A class for displaying fretboards in ASCII text.'''
@@ -32,7 +34,7 @@ class Console(FretboardDisplay):
                       - `number` (int): the fret number
                       - `note` (`Note`): the note corresponding to the fret
         '''
-        if isinstance(fmt, str):
+        if is_string(fmt):
             if fmt.lower() == 'note':
                 f = lambda fret: str(fret.note)
             elif fmt.lower() == 'interval':
@@ -125,8 +127,8 @@ class Console(FretboardDisplay):
 
                 Indicates where fret number labels shold be shown.
         '''
-        print self.get_display(tuning=tuning, fmin=fmin, fmax=fmax,
-                               invert=invert, fret_numbers=fret_numbers)
+        print(self.get_display(tuning=tuning, fmin=fmin, fmax=fmax,
+                               invert=invert, fret_numbers=fret_numbers))
 
     def get_display(self, tuning=True, fmin=None, fmax=None, invert=False,
              fret_numbers='bottom'):
@@ -165,7 +167,8 @@ class Console(FretboardDisplay):
 
         if tuning is True:
             # Display string tuning on left side of output
-            pre_frets = ['{:<3s}  '.format(n) for n in reversed(self.tuning)]
+            pre_frets = ['{:<3s}  '.format(str(n))
+                         for n in reversed(self.tuning)]
         else:
             pre_frets = ['' for n in self.tuning]
 

@@ -1,3 +1,4 @@
+from __future__ import division, print_function, unicode_literals
 from .notes import Note
 
 __all__ = ['Scale', 'Diatonic', 'Major', 'Minor', 'HarmonicMinor',
