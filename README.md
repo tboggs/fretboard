@@ -1,6 +1,6 @@
 # fretboard
 
-![travis-ci status](https://travis-ci.org/tboggs/fretboard.svg?branch=master)
+[![Build Status](https://travis-ci.org/tboggs/fretboard.svg?branch=master)](https://travis-ci.org/tboggs/fretboard)
 
 ```
         =============================================================================
